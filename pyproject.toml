@@ -1,0 +1,73 @@
+[project]
+name = "ibm-baw-mcp-server"
+version = "1.0.0"
+description = "MCP Server for IBM Business Automation Workflow"
+readme = "README.md"
+authors = [
+    { name = "IBM Corporation" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=2.13.2",
+]
+classifiers = [
+    "Private :: Do Not Upload",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+license = { text = "Apache License 2.0" }
+
+[project.urls]
+"Homepage" = "https://github.com/ibmbpm/ibm-baw-mcp-server"
+"Repository" = "https://github.com/ibmbpm/ibm-baw-mcp-server"
+"Bug Tracker" = "https://github.com/ibmbpm/ibm-baw-mcp-server/issues"
+"Documentation" = "https://github.com/ibmbpm/ibm-baw-mcp-server#readme"
+
+[project.scripts]
+ibm-baw-mcp-server = "ibm_baw_mcp_server.workflow_mcp_server:cli_main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-mock",
+    "responses",
+    "ruff",
+    "mypy",
+    "gitlint",
+]
+
+[tool.uv]
+# Define uv-specific configurations here
+
+[tool.ruff]
+# Common settings
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`), pycodestyle (`E`), isort (`I`), and more
+select = ["E", "F", "I", "N", "B", "W", "C90", "UP", "PL", "RUF"]
+ignore = []
+# Allow autofix for all enabled rules (when `--fix`) is provided
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
