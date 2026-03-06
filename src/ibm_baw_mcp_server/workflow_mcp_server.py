@@ -36,24 +36,9 @@ import logging
 import os
 from typing import Any, Literal
 
-# Set default for FastMCP experimental parser BEFORE importing FastMCP
-# This allows users to override by setting the env var before running the app
-os.environ.setdefault("FASTMCP_EXPERIMENTAL_ENABLE_NEW_OPENAPI_PARSER", "true")
-
 from fastmcp import FastMCP
-
-# Import the appropriate modules based on experimental flag
-if (
-    os.environ.get("FASTMCP_EXPERIMENTAL_ENABLE_NEW_OPENAPI_PARSER", "").lower()
-    == "true"
-):
-    from fastmcp.experimental.server.openapi import OpenAPITool
-    from fastmcp.experimental.utilities.openapi.formatters import (
-        format_description_with_responses,
-    )
-else:
-    from fastmcp.server.openapi import OpenAPITool
-    from fastmcp.utilities.openapi import format_description_with_responses
+from fastmcp.server.providers.openapi import OpenAPITool
+from fastmcp.utilities.openapi import format_description_with_responses
 
 from ibm_baw_mcp_server import __version__
 from ibm_baw_mcp_server.client import WorkflowClient
@@ -233,12 +218,12 @@ def create_mcp_server() -> FastMCP:
                     mcp_component_fn=customize_tool_description,
                 )
 
-                # Add a unique prefix to avoid duplicate tool names
-                prefix = (
+                # Add a unique namespace to avoid duplicate tool names
+                namespace = (
                     f"{process_app_short_name}_{replace_invalid_characters(api_title)}"
                 )
-                logger.info(f"Mounting API with prefix: {prefix}")
-                main_mcp.mount(openapi_mcp, prefix=prefix)
+                logger.info(f"Mounting API with namespace: {namespace}")
+                main_mcp.mount(openapi_mcp, namespace=namespace)
             except Exception as e:
                 logger.error(
                     f"Error processing OpenAPI spec for {process_app_short_name}/{api_title}: {e!s}",  # noqa: E501
@@ -277,7 +262,9 @@ def main(transport: Transport = "stdio") -> None:
                 "Using Streamable HTTP transport - server will use HTTP with streaming capabilities"  # noqa: E501
             )
 
-        main_mcp.run(transport=transport)
+        # Disable banner to prevent FastMCP from reading files it may not have access to
+        # which can cause PermissionError when attempting to read system files
+        main_mcp.run(transport=transport, show_banner=False)
     except Exception as e:
         logger.critical(f"Fatal error in main: {e!s}", exc_info=True)
         raise
