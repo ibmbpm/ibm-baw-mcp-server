@@ -1,6 +1,6 @@
 [project]
 name = "ibm-baw-mcp-server"
-version = "1.0.6"
+version = "1.0.7"
 description = "MCP Server for IBM Business Automation Workflow"
 readme = "README.md"
 authors = [
@@ -37,7 +37,6 @@ dev = [
     "responses",
     "ruff",
     "mypy",
-    "gitlint",
 ]
 
 [tool.uv]
