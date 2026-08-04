@@ -145,6 +145,10 @@ For detailed instructions, see: [Configuring App Credentials](https://www.ibm.co
      ```bash
      uvx --from git+https://github.com/ibmbpm/ibm-baw-mcp-server ibm-baw-mcp-server
      ```
+     or
+     ```bash
+     uvx --from https://github.com/ibmbpm/ibm-baw-mcp-server/archive/refs/heads/main.zip ibm-baw-mcp-server
+     ``` 
    - **Connection**: Select the `ibm-baw` connection that you created in Step 1
 4. Click **Import** to start the server
 
@@ -241,18 +245,6 @@ The current MCP specification does not support asynchronous tools. This has impo
 ### MCP client limitations
 
 Some MCP clients have limitations that affect which tools can be used. There are the following known issues with IBM watsonx Orchestrate:
-
-- **Name conflicts in complex types:** If a complex type includes properties that are themselves complex types, and those nested types use property names that are already used at a higher level (for example, name, id), the MCP client cannot invoke the tool properly.
-
-   **Workaround:**
-   - When creating new exposed REST services, avoid using identical property names at different levels within the complex type hierarchy that define the input types of the REST service.
-   - For existing exposed REST services, create a service flow or process that acts as a wrapper. This wrapper should call the original service implementation and expose a new REST service that uses only supported data types.
-
-- **Recursive complex types:** If a complex type includes properties of recursive complex types, the MCP server cannot be imported.
-   
-   **Workaround:**
-   - Apply the same workarounds previously described
-   - Alternatively, you could use the "--tools" parameter during import to specify all the tools you want to import and exclude those that use recursive complex types, as described in the [wxO documentation](https://developer.watson-orchestrate.ibm.com/tools/toolkits/local_mcp_toolkits). When you import a toolkit, Orchestrate exposes each tool within it individually using the naming format: `<toolkit_name>:<process_app_acronym>_<rest_service_name>_<operation_name>`
 
 - **Dynamic MCP server update limitations for newly added REST services:** Watsonx Orchestrate (wxO) currently does not support updating or restarting an MCP server (toolkit) to dynamically add newly exposed REST services as tools.
 
